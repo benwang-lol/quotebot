@@ -1,16 +1,16 @@
 import discord
 import responses
 import constants
-# import QuoteBot    
+import QuoteBot    
 
-# quoteBot = QuoteBot.QuoteBot()
+quoteBot = QuoteBot.QuoteBot()
 # Send messages
-async def send_message(message, user_message, is_private):
+async def send_message(user, message, user_message, is_private):
     try:
-        response = responses.handle_response(user_message)
-        await message.author.send(response) if is_private else await message.channel.send(response)
-        # response = quoteBot.handle_message(user_message)
-        # await message.channel.send(response) 
+        # response = responses.handle_response(user_message)
+        # await message.author.send(response) if is_private else await message.channel.send(response)
+        response = quoteBot.handle_message(user, user_message)
+        await message.channel.send(response) 
 
     except Exception as e:
         print(e)
@@ -40,19 +40,7 @@ def run_discord_bot():
         # Debug printing
         print(f"{username} said: '{user_message}' ({channel})")
 
-        # If the user message contains a '?' in front of the text, it becomes a private message
-        if user_message[0] == '?':
-            user_message = user_message[1:]  # [1:] Removes the '?'
-            await send_message(message, user_message, is_private=True)
-        else:
-            await send_message(message, user_message, is_private=False)
+        user = username
+        await send_message(user, message, user_message, is_private=False)
 
-        # if user_message.startswith("$quote"):
-        #     await send_message(message, user_message, is_private=False)
-        #     quoteBot.add_quote(username, user_message)
-        #     return 
-        # if user_message == "$quoteShowAll": 
-        #     return quoteBot.show_all_quotes()
-
-    # Remember to run your bot with your personal TOKEN
     client.run(TOKEN)
